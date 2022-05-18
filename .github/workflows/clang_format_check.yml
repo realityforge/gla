@@ -25,3 +25,5 @@ jobs:
         uses: jidicula/clang-format-action@v4.5.0
         with:
           clang-format-version: '14'
+          # Exclude the files downloaded from khronos website
+          exclude-regex: 'include/.*'
