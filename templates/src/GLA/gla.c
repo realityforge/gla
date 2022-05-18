@@ -258,7 +258,7 @@ static void detect_extensions()
     for (int i = 0; i < extension_count; i++) {
         const GLubyte* extension_name = glGetStringi(GL_EXTENSIONS, i);
         for (int j = 0; j < COUNT_OF(gla_extension_names); j++) {
-            if (0 == strcmp(gla_extension_names[j], (const char *)extension_name)) {
+            if (0 == strcmp(gla_extension_names[j], (const char*)extension_name)) {
                 glaExtensions.extensions[j] = true;
             }
         }
@@ -385,7 +385,7 @@ const char* glaErrorCodeToMessage(const GLenum error_code)
     }
 }
 
-void glaCheckError(const char* statement, const char* filename, const int line, void (*print)(const char *))
+void glaCheckError(const char* statement, const char* filename, const int line, void (*print)(const char*))
 {
     const GLenum error_code = glGetError();
     if (GL_NO_ERROR != error_code) {
