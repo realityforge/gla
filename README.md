@@ -50,13 +50,13 @@ To integrate with the Bazel build tool add the following to your `WORKSPACE.baze
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 _GLA_VERSION = "1.0"
-_GLA_SHA256 = "..."
+_GLA_SHA256 = "b7c418a2a01150d044dfa2721241814595285b57935008e9f9e645c49325d575"
 
 http_archive(
     name="gla",
-    url="https://github.com/realityforge/gla/archive/%s.tar.gz" % _GLA_VERSION,
     sha256=_GLA_SHA256,
     strip_prefix="gla-%s" % _GLA_VERSION,
+    url="https://github.com/realityforge/gla/archive/refs/tags/v%s.tar.gz" % _GLA_VERSION,
 )
 ```
 
