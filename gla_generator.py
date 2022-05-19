@@ -24,31 +24,34 @@ import os
 import re
 
 parser = argparse.ArgumentParser(description='gla generator script')
-parser.add_argument('--quiet', action='store_true', help='Quiet output')
-parser.add_argument('--verbose', action='store_true', help='Verbose output')
+parser.add_argument('--quiet', action='store_true', help='quiet output')
+parser.add_argument('--verbose', action='store_true', help='verbose output')
 parser.add_argument('--header_only',
                     action='store_true',
-                    help='Should the output be a src file and a header or just a header '
-                         'with a section guarded by GLA_IMPLEMENTATION')
+                    help="generate a header-only library guarded by GLA_IMPLEMENTATION")
 parser.add_argument('--input_dir',
+                    metavar='D',
                     type=str,
                     default=os.path.dirname(os.path.realpath(__file__)),
-                    help='Input directory')
-parser.add_argument('--output_directory', type=str, default='', help='Output directory')
+                    help='the input directory')
+parser.add_argument('--output_directory', metavar='D', type=str, default='', help='the output directory')
 parser.add_argument('--minimum_profile',
                     type=str,
+                    metavar='V',
                     default='1.0',
-                    help='The lowest OpenGL profile that the generated code will support')
+                    help='the lowest OpenGL profile that the generated code will support')
 parser.add_argument('--maximum_profile',
                     type=str,
+                    metavar='V',
                     default='99.99',
-                    help='The highest OpenGL profile that this tool will support')
+                    help='the highest OpenGL profile that the generated code will support')
 parser.add_argument('--extension',
                     action='append',
+                    metavar='E',
                     type=str,
                     dest='extensions',
                     default=[],
-                    help='An extension that will be supported by wrapper')
+                    help='an extension that the generated code will support')
 args = parser.parse_args()
 
 extensions = args.extensions.sort
