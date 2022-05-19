@@ -54,7 +54,9 @@ parser.add_argument('--extension',
                     help='an extension that the generated code will support')
 args = parser.parse_args()
 
-extensions = args.extensions.sort
+extensions = args.extensions
+# noinspection PyStatementEffect
+extensions.sort
 
 quiet = args.quiet is not None and args.quiet
 verbose = not quiet and args.verbose
