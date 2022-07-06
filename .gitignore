@@ -14,7 +14,7 @@ Icon?
 # Bazel Build dirs
 ############################
 /bazel-*
-/*.bazelrc
+/user.bazelrc
 
 # JetBrains IDEs
 ############################
