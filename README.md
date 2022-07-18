@@ -4,8 +4,7 @@ GLA is an OpenGL Loading Library.
 
 > An OpenGL Loading Library is a library that loads pointers to OpenGL functions at runtime, core as well as extensions.
 > This is required to access functions from OpenGL versions above 1.1 on most platforms. Extension loading libraries
-> also
-> abstracts away the difference between the loading mechanisms on different platforms.
+> also abstract away the difference between the loading mechanisms on different platforms.
 
 - [OpenGL Loading Library - khronos.org](https://www.khronos.org/opengl/wiki/OpenGL_Loading_Library)
 
