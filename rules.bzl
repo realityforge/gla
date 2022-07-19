@@ -18,12 +18,13 @@ def gla_lib(name, header_only, minimum_profile, maximum_profile, extensions = []
             "@gla//:templates/include/GLA/gla.h",
             "@gla//:templates/src/GLA/gla.c",
         ],
-        outs = ["include/GLA/gla.h"] + ([] if header_only else ["src/GLA/gla.c"]),
+        outs = ["%s/include/GLA/gla.h" % name] + ([] if header_only else ["%s/src/GLA/gla.c" % name]),
         cmd =
-            "$(location @gla//:gla_generator) --quiet %s --minimum_profile %s --maximum_profile %s --output_directory $(RULEDIR) %s" % (
+            "$(location @gla//:gla_generator) --quiet %s --minimum_profile %s --maximum_profile %s --output_directory $(RULEDIR)/%s %s" % (
                 "--header_only" if header_only else "",
                 minimum_profile,
                 maximum_profile,
+                name,
                 " ".join(["--extension " + e for e in extensions]),
             ),
         tools = ["@gla//:gla_generator"],
@@ -31,12 +32,12 @@ def gla_lib(name, header_only, minimum_profile, maximum_profile, extensions = []
 
     native.cc_library(
         name = name,
-        srcs = [] if header_only else ["src/GLA/gla.c"],
+        srcs = [] if header_only else ["%s/src/GLA/gla.c" % name],
         hdrs = [
-            "include/GLA/gla.h",
+            "%s/include/GLA/gla.h" % name,
             "@gla//:specification_files",
         ],
-        includes = ["include"],
+        includes = ["%s/include" % name],
         deps = ["@gla//:gl"],
         **kwargs
     )
