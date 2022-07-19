@@ -244,7 +244,7 @@ union GLAExtensions glaExtensions;
 
 static void reset_extensions()
 {
-    for (int j = 0; j < COUNT_OF(gla_extension_names); j++) {
+    for (size_t j = 0; j < COUNT_OF(gla_extension_names); j++) {
         glaExtensions.extensions[j] = false;
     }
 }
@@ -257,7 +257,7 @@ static void detect_extensions()
     glGetIntegerv(GL_NUM_EXTENSIONS, &extension_count);
     for (int i = 0; i < extension_count; i++) {
         const GLubyte* extension_name = glGetStringi(GL_EXTENSIONS, i);
-        for (int j = 0; j < COUNT_OF(gla_extension_names); j++) {
+        for (size_t j = 0; j < COUNT_OF(gla_extension_names); j++) {
             if (0 == strcmp(gla_extension_names[j], (const char*)extension_name)) {
                 glaExtensions.extensions[j] = true;
             }
