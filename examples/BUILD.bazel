@@ -1,0 +1,80 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+load("//:rules.bzl", "gla_lib")
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+COPTS = [
+    "-Wall",
+    "-Wpedantic",
+    "-Wextra",
+    "-Weverything",
+    "-Wno-padded",
+]
+
+cc_binary(
+    name = "standalone",
+    srcs = ["main.c"],
+    copts = COPTS,
+    deps = [":standalone_gla_generator"],
+)
+
+gla_lib(
+    name = "standalone_gla_generator",
+    copts = COPTS,
+    extensions = [
+        "GL_ARB_framebuffer_object",
+        "GL_ARB_depth_clamp",
+        "GL_ARB_seamless_cube_map",
+        "GL_NVX_gpu_memory_info",
+        "GL_ATI_meminfo",
+        "GL_ARB_texture_compression_rgtc",
+        "GL_ARB_texture_compression_bptc",
+        "GL_EXT_texture_compression_s3tc",
+        "GL_EXT_texture_filter_anisotropic",
+        "GL_EXT_texture_sRGB",
+        "GL_S3_s3tc",
+    ],
+    header_only = False,
+    maximum_profile = "3.2",
+    minimum_profile = "3.0",
+)
+
+# This library defines GLA_IMPLEMENTATION so
+cc_binary(
+    name = "header_only",
+    srcs = ["main.c"],
+    copts = COPTS,
+    defines = ["HEADER_ONLY"],
+    deps = [":header_only_gla_generator"],
+)
+
+gla_lib(
+    name = "header_only_gla_generator",
+    copts = COPTS,
+    extensions = [
+        "GL_ARB_framebuffer_object",
+        "GL_ARB_depth_clamp",
+        "GL_ARB_seamless_cube_map",
+        "GL_NVX_gpu_memory_info",
+        "GL_ATI_meminfo",
+        "GL_ARB_texture_compression_rgtc",
+        "GL_ARB_texture_compression_bptc",
+        "GL_EXT_texture_compression_s3tc",
+        "GL_EXT_texture_filter_anisotropic",
+        "GL_EXT_texture_sRGB",
+        "GL_S3_s3tc",
+    ],
+    header_only = True,
+    maximum_profile = "3.2",
+    minimum_profile = "3.0",
+)
