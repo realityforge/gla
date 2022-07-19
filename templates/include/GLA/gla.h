@@ -74,7 +74,10 @@ GLA_API void glaCheckError(const char* statement, const char* filename, int line
         glaCheckError(#statement, __FILE__, __LINE__, GLA_AUTO_CHECK_ERROR_HANDLER); \
     } while (0)
 #else
-#define GLA_CHECK(statement) statement
+#define GLA_CHECK(statement)                                                         \
+    do {                                                                             \
+        statement;                                                                   \
+    } while (0)
 #endif
 
 /**
