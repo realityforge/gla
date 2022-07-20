@@ -17,9 +17,12 @@ COPTS = [
     "-Wall",
     "-Wpedantic",
     "-Wextra",
-    "-Weverything",
     "-Wno-padded",
-]
+] + select({
+    # Linux version in github action uses gcc rather than clang which does not have this warning flag present
+    "@platforms//os:macos": ["-Weverything"],
+    "//conditions:default": [],
+})
 
 cc_binary(
     name = "standalone",
