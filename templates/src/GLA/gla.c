@@ -197,6 +197,9 @@ static int gla_open_libgl()
     }
 }
 
+// Disable warning under gcc - "warning: ISO C forbids conversion of object pointer to function pointer type [-Wpedantic]"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
 static GLAglFunction gla_get_function(const char* function_name)
 {
     // Before EGL version 1.5, eglGetProcAddress doesn't support querying core
@@ -205,16 +208,18 @@ static GLAglFunction gla_get_function(const char* function_name)
 
     GLAglFunction function = NULL;
     if (gla_libegl_handle) {
-        *(void **) (&function) = dlsym(gla_libgl_handle, function_name);
+        function = (GLAglFunction)dlsym(gla_libgl_handle, function_name);
     }
     if (NULL == function) {
-        *(void **) (&function) = gla_get_function_address(function_name);
+        function = (GLAglFunction)gla_get_function_address(function_name);
     }
     if (!gla_libegl_handle && NULL == function) {
-        *(void **) (&function) = dlsym(gla_libgl_handle, function_name);
+        function = (GLAglFunction)dlsym(gla_libgl_handle, function_name);
     }
     return function;
 }
+#pragma GCC diagnostic pop
+
 #endif
 
 GLA_IMPL_CONTENT;
