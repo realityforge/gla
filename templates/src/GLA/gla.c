@@ -134,7 +134,7 @@ static void gla_close_libgl()
 static int gla_is_library_loaded(const char* name, void** lib)
 {
     *lib = dlopen(name, RTLD_LAZY | RTLD_LOCAL | RTLD_NOLOAD);
-    dlerror() return NULL != *lib;
+    return NULL != *lib;
 }
 
 static int gla_open_libs()
