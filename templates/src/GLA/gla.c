@@ -106,6 +106,7 @@ static GLAglFunction gla_get_function(const char* function_name)
 }
 #else
 #include <dlfcn.h>
+#include <stdio.h>
 
 // OpenGL library
 static void* gla_libgl_handle = NULL;
