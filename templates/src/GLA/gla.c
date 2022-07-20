@@ -205,13 +205,13 @@ static GLAglFunction gla_get_function(const char* function_name)
 
     GLAglFunction function = NULL;
     if (gla_libegl_handle) {
-        function = (GLAglFunction)dlsym(gla_libgl_handle, function_name);
+        *(void **) (&function) = dlsym(gla_libgl_handle, function_name);
     }
     if (NULL == function) {
-        function = gla_get_function_address(function_name);
+        *(void **) (&function) = gla_get_function_address(function_name);
     }
     if (!gla_libegl_handle && NULL == function) {
-        function = (GLAglFunction)dlsym(gla_libgl_handle, function_name);
+        *(void **) (&function) = dlsym(gla_libgl_handle, function_name);
     }
     return function;
 }
