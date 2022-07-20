@@ -13,6 +13,12 @@
 load("//:rules.bzl", "gla_lib")
 load("@rules_cc//cc:defs.bzl", "cc_library")
 
+cc_library(
+    name = "dl",
+    linkopts = ["-ldl"],
+    visibility = ["//visibility:public"],
+)
+
 COPTS = [
     "-Wall",
     "-Wpedantic",
@@ -28,7 +34,10 @@ cc_binary(
     name = "standalone",
     srcs = ["main.c"],
     copts = COPTS,
-    deps = [":standalone_gla_generator"],
+    deps = [
+        ":dl",
+        ":standalone_gla_generator",
+    ],
 )
 
 gla_lib(
@@ -58,7 +67,10 @@ cc_binary(
     srcs = ["main.c"],
     copts = COPTS,
     defines = ["HEADER_ONLY"],
-    deps = [":header_only_gla_generator"],
+    deps = [
+        ":dl",
+        ":header_only_gla_generator",
+    ],
 )
 
 gla_lib(
