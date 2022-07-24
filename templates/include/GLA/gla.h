@@ -65,9 +65,9 @@ GLA_API int glaDispose(void);
  */
 GLA_API const char* glaError(void);
 
-#ifdef GLA_AUTO_CHECK_ERROR_HANDLER
 GLA_API void glaCheckError(const char* statement, const char* filename, int line, void (*print)(const char*));
 
+#ifdef GLA_AUTO_CHECK_ERROR_HANDLER
 #define GLA_CHECK(statement)                                                         \
     do {                                                                             \
         statement;                                                                   \
