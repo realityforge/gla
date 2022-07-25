@@ -65,6 +65,14 @@ GLA_API int glaDispose(void);
  */
 GLA_API const char* glaError(void);
 
+/**
+ * Check whether an error occurred and if it did then emit an error to the specified print statement.
+ *
+ * @param statement the statement that caused the error.
+ * @param filename the filename in which the error occurred.
+ * @param line the line on which the error occurred.
+ * @param print the function to call with the formatted error message.
+ */
 GLA_API void glaCheckError(const char* statement, const char* filename, int line, void (*print)(const char*));
 
 #ifdef GLA_AUTO_CHECK_ERROR_HANDLER
