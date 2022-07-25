@@ -40,9 +40,21 @@ cc_binary(
     ],
 )
 
+config_setting(
+    name = "debug_compilation_mode",
+    values = {"compilation_mode": "dbg"},
+)
+
 gla_lib(
     name = "standalone_gla_generator",
     copts = COPTS,
+    defines = select({
+        # Enable support for AutoCheckErrorHandler in debug builds
+        # However the .c file still has to define GLA_AUTO_CHECK_ERROR_HANDLER prior to #including
+        # the gla.h header, otherwise the gl functions within that file will not be checked
+        ":debug_compilation_mode": ["GLA_SUPPORT_AUTO_CHECK_ERROR_HANDLER"],
+        "//conditions:default": [],
+    }),
     extensions = [
         "GL_ARB_framebuffer_object",
         "GL_ARB_depth_clamp",

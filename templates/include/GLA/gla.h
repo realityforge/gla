@@ -65,6 +65,7 @@ GLA_API int glaDispose(void);
  */
 GLA_API const char* glaError(void);
 
+#ifdef GLA_SUPPORT_AUTO_CHECK_ERROR_HANDLER
 /**
  * Check whether an error occurred and if it did then emit an error to the specified print statement.
  *
@@ -81,12 +82,16 @@ GLA_API void glaCheckError(const char* statement, const char* filename, int line
         statement;                                                                   \
         glaCheckError(#statement, __FILE__, __LINE__, GLA_AUTO_CHECK_ERROR_HANDLER); \
     } while (0)
-#else
+#endif
+#endif
+
+#ifndef GLA_CHECK
 #define GLA_CHECK(statement)                                                         \
     do {                                                                             \
         statement;                                                                   \
     } while (0)
 #endif
+
 
 /**
  * Convert the specified error code into an error message if possible.

@@ -391,6 +391,7 @@ const char* glaErrorCodeToMessage(const GLenum error_code)
     }
 }
 
+#ifdef GLA_SUPPORT_AUTO_CHECK_ERROR_HANDLER
 void glaCheckError(const char* statement, const char* filename, const int line, void (*print)(const char*))
 {
     const GLenum error_code = glGetError();
@@ -407,3 +408,4 @@ void glaCheckError(const char* statement, const char* filename, const int line, 
         print(gla_error);
     }
 }
+#endif
