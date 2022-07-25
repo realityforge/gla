@@ -5,6 +5,7 @@
 *.c text
 *.md text
 *.yml text
+.bazelrc text
 .bazelversion text
 .gitattributes text
 .gitignore text
