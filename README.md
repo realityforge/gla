@@ -43,23 +43,7 @@ optional arguments:
 
 ## Bazel Integration
 
-To integrate with the Bazel build tool add the following to your `WORKSPACE.bazel` file:
-
-```python
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-_GLA_VERSION = "1.1"
-_GLA_SHA256 = "421cd5fb47f8782a2a05fc7bee98f842a4c11e242b1ceb776b101d7b3096bda1"
-
-http_archive(
-    name="gla",
-    sha256=_GLA_SHA256,
-    strip_prefix="gla-%s" % _GLA_VERSION,
-    url="https://github.com/realityforge/gla/archive/refs/tags/v%s.tar.gz" % _GLA_VERSION,
-)
-```
-
-And then add the following into the `BUILD.bazel` file for the package that will define the `gla` library:
+To integrate into a Bazel build you need to add the snippet from the latest release (See the [releases](https://github.com/realityforge/gla/releases) page) and then add the following into the `BUILD.bazel` file for the package that will define the `gla` library:
 
 ```python
 load("@gla//:rules.bzl", "gla_lib")
