@@ -1,5 +1,7 @@
 # GLA
 
+[![Build](https://github.com/realityforge/gla/actions/workflows/build.yml/badge.svg)](https://github.com/realityforge/gla/actions/workflows/build.yml)
+
 GLA is an OpenGL Loading Library.
 
 > An OpenGL Loading Library is a library that loads pointers to OpenGL functions at runtime, core as well as extensions.
