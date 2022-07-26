@@ -37,7 +37,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           body: |
-            Copy the following into your WORKSPACE file to use gla at release ${{ steps.get_tag.outputs.VERSION }}
+            Copy the following into your `WORKSPACE.bazel` file to use `gla` at release `${{ steps.get_tag.outputs.VERSION }}`
+
             ```python
             load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
