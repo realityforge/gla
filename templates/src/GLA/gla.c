@@ -389,7 +389,7 @@ int glaInitUsingLoader(const GLAGetProcAddressProc proc)
     if (NULL != gla_error) {
         return GLA_ERROR_LIBRARY_CLOSE;
     } else {
-        return init_by_load_functions( proc );
+        return init_by_load_functions(proc);
     }
 }
 
