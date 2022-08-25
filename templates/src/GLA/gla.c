@@ -192,7 +192,7 @@ static int gla_open_libgl()
             if (NULL == gla_error) {
                 snprintf(gla_error_buffer,
                          GLA_MAX_ERROR_MESSAGE_LENGTH,
-                         "Failed initialising the OpenGL library as it is missing critical symbol: %s" get_function_name);
+                         "Failed initialising the OpenGL library as it is missing critical symbol: %s", get_function_name);
                 gla_error = gla_error_buffer;
             }
             return GLA_ERROR_INIT;
