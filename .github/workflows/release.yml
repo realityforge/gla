@@ -44,9 +44,11 @@ jobs:
 
             GLA_VERSION = "${{ steps.get_tag.outputs.VERSION }}"
 
+            GLA_SHA256 = "${{ steps.get_sha.outputs.sha }}"
+
             http_archive(
               name = "gla",
-              sha256 = "${{ steps.get_sha.outputs.sha }}",
+              sha256 =             GLA_SHA256,
               strip_prefix = "gla-${{ steps.get_tag.outputs.VERSION }}",
               url = "https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/archive/refs/tags/v%s.tar.gz" % GLA_VERSION,
             )
