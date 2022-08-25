@@ -27,11 +27,11 @@ jobs:
 
       - uses: actions/checkout@v3
 
-      - run: curl https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/archive/refs/tags/v${{ steps.get_tag.outputs.VERSION }}.tar.gz > gla-${{ steps.get_tag.outputs.VERSION }}.tar.gz
+      - run: wget https://github.com/${{ github.repository_owner }}/${{ github.event.repository.name }}/archive/refs/tags/v${{ steps.get_tag.outputs.VERSION }}.tar.gz
 
       - name: Get SHA256 of archive
         id: get_sha
-        run: echo "::set-output name=sha::$(sha256sum gla-${{ steps.get_tag.outputs.VERSION }}.tar.gz | cut -f 1 -d ' ')"
+        run: echo "::set-output name=sha::$(sha256sum v${{ steps.get_tag.outputs.VERSION }}.tar.gz | cut -f 1 -d ' ')"
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
