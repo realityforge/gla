@@ -342,10 +342,6 @@ int glaInit()
             }
             if (false == load_functions(gla_get_function)) {
                 gla_dispose();
-                if( NULL == gla_error )
-                {
-                    gla_error = "Failed initialising the OpenGL library as it is missing critical symbols";
-                }
                 return GLA_ERROR_INIT;
             } else if (NULL == glaFunctions.function.GetIntegerv) {
                 gla_dispose();
