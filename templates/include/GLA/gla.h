@@ -86,9 +86,9 @@ GLA_API void glaCheckError(const char* statement, const char* filename, int line
 #endif
 
 #ifndef GLA_CHECK
-#define GLA_CHECK(statement)                                                         \
-    do {                                                                             \
-        statement;                                                                   \
+#define GLA_CHECK(statement) \
+    do {                     \
+        statement;           \
     } while (0)
 #endif
 
