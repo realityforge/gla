@@ -16,8 +16,6 @@
 #include <string.h>
 #include "GLA/gla.h"
 
-typedef GLAglFunction (*GLAGetProcAddressProc)(const char* function_name);
-
 #define GLA_MAX_ERROR_MESSAGE_LENGTH 1024
 static char gla_error_buffer[GLA_MAX_ERROR_MESSAGE_LENGTH] = { 0 };
 static char* gla_error = NULL;
@@ -323,6 +321,46 @@ static void gla_dispose()
 
 static bool gla_close_libgl_atexit_registered = false;
 
+static int init_by_load_functions(GLAGetProcAddressProc proc)
+{
+    if (false == load_functions(proc)) {
+        gla_dispose();
+        return GLA_ERROR_INIT;
+    } else if (NULL == glaFunctions.function.GetIntegerv) {
+        gla_dispose();
+        if (NULL == gla_error) {
+            gla_error = "Failed initialising the OpenGL library as it is missing critical symbol: glGetIntegerv";
+        }
+        return GLA_ERROR_INIT;
+    } else {
+        glGetIntegerv(GL_MAJOR_VERSION, &gla_major_version);
+        glGetIntegerv(GL_MINOR_VERSION, &gla_minor_version);
+
+        if (gla_is_version(GLA_MIN_MAJOR_VERSION, GLA_MIN_MINOR_VERSION)) {
+            gla_dispose();
+            if (NULL == gla_error) {
+                snprintf(gla_error_buffer,
+                         GLA_MAX_ERROR_MESSAGE_LENGTH,
+                         "The OpenGL library does not meet the minimum version requirements specified when invoking glaInit. "
+                         "Expected minimum version %d.%d, Actual version %d.%d",
+                         GLA_MIN_MAJOR_VERSION,
+                         GLA_MIN_MINOR_VERSION,
+                         gla_major_version,
+                         gla_minor_version);
+                gla_error = gla_error_buffer;
+            }
+            return GLA_ERROR_OPENGL_VERSION;
+        } else {
+#ifdef GLFW_SUPPORT_EXTENSIONS
+            detect_extensions();
+#endif
+#ifdef GLFW_SUPPORT_OPTIONAL_VERSIONS
+            detect_versions();
+#endif
+            return GLA_OK;
+        }
+    }
+}
 int glaInit()
 {
     gla_error = NULL;
@@ -339,44 +377,19 @@ int glaInit()
                     gla_close_libgl_atexit_registered = true;
                 }
             }
-            if (false == load_functions(gla_get_function)) {
-                gla_dispose();
-                return GLA_ERROR_INIT;
-            } else if (NULL == glaFunctions.function.GetIntegerv) {
-                gla_dispose();
-                if (NULL == gla_error) {
-                    gla_error = "Failed initialising the OpenGL library as it is missing critical symbol: glGetIntegerv";
-                }
-                return GLA_ERROR_INIT;
-            } else {
-                glGetIntegerv(GL_MAJOR_VERSION, &gla_major_version);
-                glGetIntegerv(GL_MINOR_VERSION, &gla_minor_version);
-
-                if (gla_is_version(GLA_MIN_MAJOR_VERSION, GLA_MIN_MINOR_VERSION)) {
-                    gla_dispose();
-                    if (NULL == gla_error) {
-                        snprintf(gla_error_buffer,
-                                 GLA_MAX_ERROR_MESSAGE_LENGTH,
-                                 "The OpenGL library does not meet the minimum version requirements specified when invoking glaInit. "
-                                 "Expected minimum version %d.%d, Actual version %d.%d",
-                                 GLA_MIN_MAJOR_VERSION,
-                                 GLA_MIN_MINOR_VERSION,
-                                 gla_major_version,
-                                 gla_minor_version);
-                        gla_error = gla_error_buffer;
-                    }
-                    return GLA_ERROR_OPENGL_VERSION;
-                } else {
-#ifdef GLFW_SUPPORT_EXTENSIONS
-                    detect_extensions();
-#endif
-#ifdef GLFW_SUPPORT_OPTIONAL_VERSIONS
-                    detect_versions();
-#endif
-                    return GLA_OK;
-                }
-            }
+            return init_by_load_functions(gla_get_function);
         }
+    }
+}
+
+int glaInitUsingLoader(const GLAGetProcAddressProc proc)
+{
+    gla_error = NULL;
+    gla_dispose();
+    if (NULL != gla_error) {
+        return GLA_ERROR_LIBRARY_CLOSE;
+    } else {
+        return init_by_load_functions( proc );
     }
 }
 

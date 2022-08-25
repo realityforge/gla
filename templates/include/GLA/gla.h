@@ -43,12 +43,24 @@ extern "C" {
 // The OpenGL library does not meet the minimum version requirements specified when invoking glaInit
 #define GLA_ERROR_OPENGL_VERSION (-4)
 
+typedef void (*GLAglFunction)();
+
+typedef GLAglFunction (*GLAGetProcAddressProc)(const char* function_name);
+
 /**
  * Initializes the library. Should be called once after an OpenGL context has been created.
  *
  * @return GLA_OK on success, GLA_ERROR_OPENGL_VERSION if minimum version (specified at build time) failed to be met, GLA_ERROR_LIBRARY_CLOSE if the wrapper was already initialized and failed to be disposed, GLA_ERROR_INIT if the library is missing critical symbols
  */
 GLA_API int glaInit(void);
+
+/**
+ * Initializes the library using the specified function to load the required functions.
+ *
+ * @param the function to load GL functions.
+ * @return GLA_OK on success, GLA_ERROR_OPENGL_VERSION if minimum version (specified at build time) failed to be met, GLA_ERROR_LIBRARY_CLOSE if the wrapper was already initialized and failed to be disposed, GLA_ERROR_INIT if the library is missing critical symbols
+ */
+GLA_API int glaInitUsingLoader(GLAGetProcAddressProc proc);
 
 /**
  * Dispose the wrapper.
@@ -99,8 +111,6 @@ GLA_API void glaCheckError(const char* statement, const char* filename, int line
  * @return the associated error message if it can be determined or NULL.
  */
 const char* glaErrorCodeToMessage(GLenum error_code);
-
-typedef void (*GLAglFunction)();
 
 GLA_INTERFACE_CONTENT;
 
