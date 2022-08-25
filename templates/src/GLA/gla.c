@@ -347,7 +347,7 @@ int glaInit()
                 gla_dispose();
                 if( NULL == gla_error )
                 {
-                    gla_error = "Failed initialising the OpenGL library as it is missing critical symbols";
+                    gla_error = "Failed initialising the OpenGL library as it is missing critical symbols: glGetIntegerv";
                 }
                 return GLA_ERROR_INIT;
             } else {
