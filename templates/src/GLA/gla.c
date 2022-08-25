@@ -51,6 +51,10 @@ static int gla_open_libgl()
 {
     gla_libgl_handle = LoadLibraryA("opengl32.dll");
     if (NULL == gla_libgl_handle) {
+        if( NULL == gla_error )
+        {
+            gla_error = "Error opening the OpenGL shared library";
+        }
         return GLA_ERROR_LIBRARY_OPEN;
     } else {
         wgl_get_proc_address = (GLAglGetProcAddr)GetProcAddress(gla_libgl_handle, "wglGetProcAddress");
@@ -190,6 +194,10 @@ static int gla_open_libgl()
 
         if (NULL == gla_get_function_address) {
             gla_close_libgl();
+            if( NULL == gla_error )
+            {
+                gla_error = "Failed initialising the OpenGL library as it is missing critical symbols";
+            }
             return GLA_ERROR_INIT;
         } else {
             return GLA_OK;
@@ -334,9 +342,17 @@ int glaInit()
             }
             if (false == load_functions(gla_get_function)) {
                 gla_dispose();
+                if( NULL == gla_error )
+                {
+                    gla_error = "Failed initialising the OpenGL library as it is missing critical symbols";
+                }
                 return GLA_ERROR_INIT;
             } else if (NULL == glaFunctions.function.GetIntegerv) {
                 gla_dispose();
+                if( NULL == gla_error )
+                {
+                    gla_error = "Failed initialising the OpenGL library as it is missing critical symbols";
+                }
                 return GLA_ERROR_INIT;
             } else {
                 glGetIntegerv(GL_MAJOR_VERSION, &gla_major_version);
@@ -344,6 +360,10 @@ int glaInit()
 
                 if (gla_is_version(GLA_MIN_MAJOR_VERSION, GLA_MIN_MINOR_VERSION)) {
                     gla_dispose();
+                    if( NULL == gla_error )
+                    {
+                        gla_error = "The OpenGL library does not meet the minimum version requirements specified when invoking glaInit";
+                    }
                     return GLA_ERROR_OPENGL_VERSION;
                 } else {
 #ifdef GLFW_SUPPORT_EXTENSIONS
