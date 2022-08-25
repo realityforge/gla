@@ -51,13 +51,15 @@ static int gla_open_libgl()
 {
     gla_libgl_handle = LoadLibraryA("opengl32.dll");
     if (NULL == gla_libgl_handle) {
-        if( NULL == gla_error )
-        {
-            gla_error = "Error opening the OpenGL shared library";
+        if (NULL == gla_error) {
+            gla_error = "Error opening the OpenGL shared library: opengl32.dll";
         }
         return GLA_ERROR_LIBRARY_OPEN;
     } else {
         wgl_get_proc_address = (GLAglGetProcAddr)GetProcAddress(gla_libgl_handle, "wglGetProcAddress");
+        if (NULL == wgl_get_proc_address && NULL == gla_error) {
+            gla_error = "Failed initialising the OpenGL library as it is missing critical symbol: glGetIntegerv";
+        }
         return GLA_OK;
     }
 }
@@ -184,19 +186,16 @@ static int gla_open_libgl()
     if (GLA_OK != open_result) {
         return open_result;
     } else {
-        if (gla_libegl_handle) {
-            gla_get_function_address = (GLAGetProcAddressProc)dlsym(gla_libegl_handle, "eglGetProcAddress");
-        } else if (gla_libglx_handle) {
-            gla_get_function_address = (GLAGetProcAddressProc)dlsym(gla_libglx_handle, "glXGetProcAddressARB");
-        } else {
-            gla_get_function_address = (GLAGetProcAddressProc)dlsym(gla_libgl_handle, "glXGetProcAddressARB");
-        }
-
+        const char* get_function_name = gla_libegl_handle ? "eglGetProcAddress" : gla_libglx_handle ? "glXGetProcAddressARB"
+                                                                                                    : "glXGetProcAddressARB";
+        gla_get_function_address = (GLAGetProcAddressProc)dlsym(gla_libegl_handle, get_function_name);
         if (NULL == gla_get_function_address) {
             gla_close_libgl();
-            if( NULL == gla_error )
-            {
-                gla_error = "Failed initialising the OpenGL library as it is missing critical symbols";
+            if (NULL == gla_error) {
+                snprintf(gla_error_buffer,
+                         GLA_MAX_ERROR_MESSAGE_LENGTH,
+                         "Failed initialising the OpenGL library as it is missing critical symbol: %s" get_function_name);
+                gla_error = gla_error_buffer;
             }
             return GLA_ERROR_INIT;
         } else {
@@ -345,9 +344,8 @@ int glaInit()
                 return GLA_ERROR_INIT;
             } else if (NULL == glaFunctions.function.GetIntegerv) {
                 gla_dispose();
-                if( NULL == gla_error )
-                {
-                    gla_error = "Failed initialising the OpenGL library as it is missing critical symbols: glGetIntegerv";
+                if (NULL == gla_error) {
+                    gla_error = "Failed initialising the OpenGL library as it is missing critical symbol: glGetIntegerv";
                 }
                 return GLA_ERROR_INIT;
             } else {
@@ -356,9 +354,16 @@ int glaInit()
 
                 if (gla_is_version(GLA_MIN_MAJOR_VERSION, GLA_MIN_MINOR_VERSION)) {
                     gla_dispose();
-                    if( NULL == gla_error )
-                    {
-                        gla_error = "The OpenGL library does not meet the minimum version requirements specified when invoking glaInit";
+                    if (NULL == gla_error) {
+                        snprintf(gla_error_buffer,
+                                 GLA_MAX_ERROR_MESSAGE_LENGTH,
+                                 "The OpenGL library does not meet the minimum version requirements specified when invoking glaInit. "
+                                 "Expected minimum version %d.%d, Actual version %d.%d",
+                                 GLA_MIN_MAJOR_VERSION,
+                                 GLA_MIN_MINOR_VERSION,
+                                 gla_major_version,
+                                 gla_minor_version);
+                        gla_error = gla_error_buffer;
                     }
                     return GLA_ERROR_OPENGL_VERSION;
                 } else {
