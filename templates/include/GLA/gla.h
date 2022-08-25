@@ -92,7 +92,6 @@ GLA_API void glaCheckError(const char* statement, const char* filename, int line
     } while (0)
 #endif
 
-
 /**
  * Convert the specified error code into an error message if possible.
  *
