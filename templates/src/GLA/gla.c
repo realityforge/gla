@@ -242,7 +242,7 @@ static bool load_functions(const GLAGetProcAddressProc proc)
 {
     for (size_t i = 0; i < COUNT_OF(gla_functions); i++) {
         glaFunctions.functions[i] = proc(gla_functions[i].name);
-        if (NULL == glaFunctions.functions[i] /*&& gla_functions[i].required*/) {
+        if (NULL == glaFunctions.functions[i] && gla_functions[i].required) {
             snprintf(gla_error_buffer, GLA_MAX_ERROR_MESSAGE_LENGTH, "Failed to load required OpenGL function: %s", gla_functions[i].name);
             gla_error = gla_error_buffer;
             return false;
